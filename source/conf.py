@@ -107,6 +107,7 @@ pygments_style = 'sphinx'
 #html_theme = 'default'
 html_theme = 'bootstrap'
 html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
+#html_logo = "my_logo.png"
 
 html_theme_options = {
     # Navigation bar title. (Default: ``project`` value)
@@ -162,7 +163,7 @@ html_theme_options = {
     #
     # Options are nothing with "" (default) or the name of a valid theme
     # such as "amelia" or "cosmo".
-#    'bootswatch_theme': "journal",
+    'bootswatch_theme': "flatly",
 
     # Choose Bootstrap version.
     # Values: "3" (default) or "2" (in quotes)

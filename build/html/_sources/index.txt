@@ -12,7 +12,7 @@ Inhalt:
    :maxdepth: 2
 
    einleitung.rst
-
+   installation.rst
 
 Indices and tables
 ==================
