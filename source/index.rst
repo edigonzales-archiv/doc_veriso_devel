@@ -13,6 +13,10 @@ Inhalt:
 
    einleitung.rst
    installation.rst
+   architektur.rst
+   complexchecks.rst
+   mehrsprachigkeit.rst
+   varia.rst
 
 Indices and tables
 ==================

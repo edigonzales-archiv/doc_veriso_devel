@@ -16,7 +16,7 @@ Es werden verschiedene Software(-komponenten) benötigt:
 
 Ubuntugis Repository
 --------------------
-Das Ubuntugis Repository stellt aktuelle(re) Versionen von GIS-Komponenten für Ubuntu zur Verfügung. Dazu sind folgenden zwei Zeilen in der Datei ``/etc/apt/sources.list`` hinzufügen:
+Das Ubuntugis Repository stellt aktuelle(re) Versionen von GIS-Komponenten (wie z.B. GDAL oder GEOS) für Ubuntu zur Verfügung. Dazu sind folgende zwei Zeilen in der Datei ``/etc/apt/sources.list`` hinzufügen:
 
 ::
 
@@ -272,9 +272,18 @@ Mit der Software Qt-Linguist können GUI-Elemente des Plugins einfach internatio
     sudo apt-get install qt4-dev-tools
 
 
+Sqliteman
+---------
+Sqliteman dient der Entwicklung und Administration von Sqlite-Datenbanken. Eine solche wird verwendet um nach dem Import der Interlis-Datei neue Tabellen und/oder View in der PostgreSQL-Datenbank zu erzeugen (mehr dazu im Kapitel :ref:`postprocessing`). Installiert wird Sqliteman mit folgendem Befehl:
+
+::
+
+    sudo apt-get install sqliteman
+
+Es gibt noch viele andere, ähnliche Programme (z.B. auch ein Firefox Plugin), die dem gleichen Zweck dienen.
+
 Optional
 --------
-
 Qt-Config
 *********
 Mit Qt-Config lässt sich das Aussehen von Qt-Anwendungen steuern:
