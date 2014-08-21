@@ -42,9 +42,9 @@ Jede Fachschale muss mindestens die Datei ``applicationmodule.py`` aufweisen:
 
    Organisation im Filesystem #4
 
-Trennung von Datenmodell und Prüfungen (Funktionen)
----------------------------------------------------
-Es ist jetzt möglich die identischen Prüfungen (unter gewissen Voraussetzungen) mit verschiedenen Datenmodellen durchzuführen. Dabei werden der Fachschale verschiedene Modelle zugewiesen. Diese Logik wird in der Datei ``modules/modules.json`` verwaltet:
+Trennung von Datenmodell und Faschalen
+--------------------------------------
+Es ist jetzt möglich die identischen Prüfungen/Funktionen (unter gewissen Voraussetzungen) mit verschiedenen Datenmodellen durchzuführen. Dabei werden der Fachschale verschiedene Modelle zugewiesen. Diese Logik wird in der Datei ``modules/modules.json`` verwaltet:
 
 ::
 
@@ -113,7 +113,7 @@ Für jedes Interlismodell müssen Informationen mitgeliefert werden:
 
 Das Plugin resp. die Python Json-Funktion sind heikel was die Gültigkeit der Json-Datei betrifft. Am besten prüft man nach Änderungen die Json-Datei mit einem Online-Prüftool, z.B.: http://jsonformatter.curiousconcept.com/
 
-Mit diesem Ansatz können jetzt die gleichen Prüfungen für verschiedene Datenmodelle durchgeführt werden. So müssen die Prüfungen nicht einmal für das kantonale Modell und z.B. für das Bundesmodell geschrieben werden. Voraussetzung ist aber, dass nichts geprüft wird, was in einem anderen Modell nicht vorkommt. Und es müssen unter Umständen die Abfragen oder die Legenden generisch(er) geschrieben werden. Der Kanton Solothurn kennt z.B. einige Erweiterungen der Bodenbedeckungsarten (die im Bundesmodell so nicht vorkommen). Eine WHERE-Bedingung zum Anzeigen sämtlicher *uebrige_befestigte* Objekte der Bodenbedeckung muss nun so aussehen:
+Durch die Trennung von Datenmodell und Fachschale können jetzt die gleichen Prüfungen für verschiedene Datenmodelle durchgeführt werden. So müssen die Prüfungen nicht einmal für das kantonale Modell und z.B. für das Bundesmodell geschrieben werden. Voraussetzung ist aber, dass nichts geprüft wird, was in einem anderen Modell nicht vorkommt. Und es müssen unter Umständen die Abfragen oder die Legenden generisch(er) geschrieben werden. Der Kanton Solothurn kennt z.B. einige Erweiterungen der Bodenbedeckungsarten (die im Bundesmodell so nicht vorkommen). Eine WHERE-Bedingung zum Anzeigen sämtlicher *uebrige_befestigte* Objekte der Bodenbedeckung muss nun so aussehen:
 
 ::
 
@@ -124,6 +124,8 @@ So werden auch sämtliche kantonale Erweiterungen aus der Datenbank gelesen. Fü
 ::
 
     "art" = 'uebrige_befestigte'
+
+.. note:: *VeriSO (EE/EN)* und *VeriSO (DM.01)* sind beides Fachschalen zur Verifikation von Daten der amtlichen Vermessung. Die erste Variante legt den Fokus auf eine gesamtheitliche Verifikation der Daten (z.B. Verifikation der Bodenbedeckung, der Liegenschaften etc.). Die zweite Variante (*VeriSO (DM.01)*) dient zur Verifikation der im AV-Datenmodell DM.01 neu hinzugekommenen Topics (v.a. Gebäudeadressen). Eine weitere verwendete Fachschale ist *PNF-Homog.* (nicht aufgelistet), die in erster Linie zum Feststellen der Widersprüche zwischen AV-Datensatz und Realität (Orthofoto) dient und für die Periodische Nachführung und PNF verwendet wird. Mit diesem Ansatz können jetzt verschiedenste Fachschalen für verschiedenste Themenbereiche und Arbeitsschritte programmiert werden. Die Fachschalen teilen sich mindestens den Importprozess, die Einstellungen und die Projekteverwaltung.
 
 
 Bezugsrahmen
@@ -194,7 +196,7 @@ Beim Importprozess stehen die in der Datei ``modules/modules.json`` eingetragene
 
    Importprozess
 
-Der *Check*-Button prüft mit einer Abfrage in der Geodatenbank, ob das Schema bereits vorhanden ist. Es wird bewusst _nicht_ die Projekteverwaltungsdatenbank, da unter Umständen gewisse Benutzer nicht alle Projekte "sehen" dürfen und eine angepasste Projekteverwaltungsdatenbank verwenden.
+Der *Check*-Button prüft mit einer Abfrage in der Geodatenbank, ob das Schema bereits vorhanden ist. Es wird bewusst *nicht* die Projekteverwaltungsdatenbank abgefragt, da unter Umständen gewisse Benutzer nicht alle Projekte "sehen" dürfen und eine angepasste Projekteverwaltungsdatenbank verwenden.
 
 Aufgrund des Systembruches (Python <-> Java) ist die Suche nach Fehlern beim Import erschwert. Nach dem Import (mit Java) sucht das (Python)-Plugin im Output-Fenster nach den Wörtern "ERROR", "FATAL" etc. um Fehler zu finden. Ist das Fenster komplett leer, wird ebenfalls von einem Fehler ausgegangen. **Vor** dieser Fehlersuche wird die Projekteverwaltungsdatenbank nachgeführt. Sollte beim Import ein Fehler aufgetreten sein, kann trotzdem das Datenbankschema via *File - Delete project* gelöscht werden. Ansonsten müsste man das manuell in pgadmin3 erledigen.
 
@@ -253,11 +255,24 @@ Die hier gewählten Datenbankparameter sind im Plugin unter *Settings - Options 
 
 Datenbankschema
 ***************
+Jedes zu prüfende Operat wird in einem seperaten Datenbankschema verwaltet. Der Importprozess generiert vor dem Importieren der Daten aus dem Interlismodell sämtliche SQL-Befehle (CREATE SCHEMA / TABLE etc.), speichert sie in einem *String* und erstellt anschliessend automatisch das Schema und die Tabellen. Zusätzlich werden sämtliche Enumerations-Code-Tabellen (z.B. Bodenbedeckungsarten) erstellt und abgefüllt.
 
-import erstellt schema. 
 
 .. _postprocessing:
 
 Postprocessing
 --------------
-fubar
+Um nicht bloss vorhanden Tabellen in QGIS anzeigen zu können, ist es möglich beliebige und beliebig komplexe SQL-Abfragen als View resp. als "Create -Table/Insert-into-Kombination" zu definieren. Diese SQL-Befehle werden während des Importprozesses *nach* nach dem Importieren der Daten abgesetzt.
+
+Verwaltet werden diese Befehle in einer SQLite-Datenbank mit vier Tabellen:
+
+1. *tables:* Tabellen erzeugen.
+2. *views:* Views erzeugen.
+3. *inserts:* SQL-Query, die in die vorher erzeugten Tabellen die Abfrageresultate schreibt.
+4. *updates:* Tabellenupdates.
+
+Die Auflistung entspricht der Reihenfolge der Ausführung. Für einfachere Abfragen können Views verwendet werden. Wenn die Performance mit Views nicht mehr reicht, sollten Tabellen erzeugt werden. Für ganz einfache Abfragen (WHERE-Bedingung) kann der "sql"-Parameter beim Laden der Layern in ComplexChecks (siehe Kapitel :ref:`complexchecks`) verwendet werden.
+
+Ein Template diese SQLite-Datenbank befindet sich im Ordner ``templates/``. Sie muss umbenannt werden von ``template_postprocessing.db`` zu ``postprocessing.db`` und in den Ordner ``postprocessing/`` der jeweiligen Fachschale kopiert werden.
+
+
