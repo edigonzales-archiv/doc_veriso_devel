@@ -134,7 +134,7 @@ Es kann jedes beliebige Koordinatensystem (mit einem EPSG-Code) einem Modell zug
 
 Mehrsprachigkeit
 ----------------
-Die Möglichkeit der Mehrsprachigkeit wird ausgiebig im Kapitel :ref:`mehrsprachigkeit` erläutert.
+Das Thema Mehrsprachigkeit wird ausgiebig im Kapitel :ref:`mehrsprachigkeit` erläutert.
 
 .. _projekteverwaltung:
 
