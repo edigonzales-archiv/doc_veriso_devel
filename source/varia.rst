@@ -51,6 +51,8 @@ Bis auf den Parameter *qgisFile = true* können Fantasiewerte verwendet werden, 
 
 Der Importprozess wird mit einer Fehlermeldung abgebrochen (aufgrund der Fantasiewerte oder des bereits vorhandenen Schemas etc.). Im ``/tmp/``-Verzeichnis wird aber ein neues Verzeichnis erstellt: ``veriso + Zufallszahl``. In diesem liegt die Datei ``tables.json``. Diese Datei muss in den Ordner ``modules/MODULNAME/tables/`` kopiert werden.
 
+Die Datei muss analog den anderen JSON-Dateien einmalig für die Mehrsprachigkeit manuell bearbeit werden (siehe Kapitel :ref:`mehrsprachigkeit`).
+
 Dieser ganzer Herstellungsprozess ist natürlich noch bisschen hakelig... aber da er nur einmalig gemacht werden muss, malesh!
 
 

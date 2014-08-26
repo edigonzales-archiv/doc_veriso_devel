@@ -36,7 +36,7 @@ Dieses Beispiel führt zu folgendem Dropdown-Menu in QGIS:
 
    Checkmenu #1
    
-Für jeden *topic*-Eintrag wird also ein Menu-Eintrag in QGIS erstellt. Erläuterung der Mehrsprachigkeit: siehe :ref:`mehrsprachigkeit`. F
+Für jeden *topic*-Eintrag wird also ein Menu-Eintrag in QGIS erstellt. Erläuterung der Mehrsprachigkeit: siehe :ref:`mehrsprachigkeit`. 
 
 Das Attribut *file* zeigt auf eine weitere JSON-Datei (z.B. topic_gebaeudeadressen), die ebenfalls im gleichen Verzeichnis vorhanden sein muss. Diese sie z.B. so aus:
 
