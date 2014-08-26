@@ -41,6 +41,8 @@ Jede Fachschale muss mindestens die Datei ``applicationmodule.py`` aufweisen:
    :align:   center
 
    Organisation im Filesystem #4
+   
+Diese Python-Datei steuert die fachschalen-spezifischen Anwendungen (z.B. Mängelpunkte laden und nach Excel exportieren etc.).
 
 Trennung von Datenmodell und Faschalen
 --------------------------------------
