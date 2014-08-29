@@ -277,4 +277,53 @@ Die Auflistung entspricht der Reihenfolge der Ausführung. Für einfachere Abfra
 
 Ein Template diese SQLite-Datenbank befindet sich im Ordner ``templates/``. Sie muss umbenannt werden von ``template_postprocessing.db`` zu ``postprocessing.db`` und in den Ordner ``postprocessing/`` der jeweiligen Fachschale kopiert werden.
 
+Konkretes Beispiel (*tables*):
 
+::
+
+ CREATE TABLE $$DBSCHEMA.t_gebaeude_groesser_12m2_ohne_eingang
+ (
+  ogc_fid serial NOT NULL,
+  tid character varying,
+  entstehung character varying,
+  geometrie geometry(POLYGON,$$EPSG),
+  flaeche double precision,
+  qualitaet integer,
+  qualitaet_txt character varying,
+  art integer,
+  art_txt character varying,
+  CONSTRAINT t_gebaeude_groesser_12m2_ohne_eingang_pkey PRIMARY KEY (ogc_fid)
+ )
+ WITH (
+  OIDS=FALSE
+ );
+
+ GRANT SELECT ON TABLE $$DBSCHEMA.t_gebaeude_groesser_12m2_ohne_eingang TO $$USER;
+
+*$$DBSCHEMA* ist der Parameter für das Schema und wird während des Importprozesses automatisch ersetzt. Gleiches gilt für *$$EPSG* und *$$USER*.
+
+Dazugehöriges *inserts*-Beispiel:
+
+::
+ 
+ INSERT INTO $$DBSCHEMA.t_gebaeude_groesser_12m2_ohne_eingang (tid, entstehung, geometrie, flaeche, qualitaet, qualitaet_txt, art, art_txt)
+
+ SELECT c.tid, c.entstehung, c.geometrie, ST_Area(c.geometrie) as flaeche, c.qualitaet, c.qualitaet_txt, c.art, c.art_txt
+ FROM 
+ (
+ SELECT bodenbedeckung_boflaeche.ogc_fid, bodenbedeckung_boflaeche.tid, bodenbedeckung_boflaeche.entstehung, 
+        bodenbedeckung_boflaeche.geometrie, bodenbedeckung_boflaeche.qualitaet, 
+        bodenbedeckung_boflaeche.qualitaet_txt, bodenbedeckung_boflaeche.art, bodenbedeckung_boflaeche.art_txt
+ FROM $$DBSCHEMA.bodenbedeckung_boflaeche
+ WHERE bodenbedeckung_boflaeche.art = 0 
+ AND ST_Area(bodenbedeckung_boflaeche.geometrie) > 12::double precision
+
+ EXCEPT 
+
+ SELECT DISTINCT ON (a.ogc_fid) a.ogc_fid, a.tid, a.entstehung, a.geometrie, a.qualitaet, a.qualitaet_txt, 
+        a.art, a.art_txt
+ FROM $$DBSCHEMA.bodenbedeckung_boflaeche a, $$DBSCHEMA.gebaeudeadressen_gebaeudeeingang b
+ WHERE a.art = 0 AND ST_Area(a.geometrie) > 12::double precision 
+ AND a.geometrie && b.lage 
+ AND ST_Distance(a.geometrie, b.lage) = 0::double precision
+ ) as c;
