@@ -8,7 +8,7 @@ Der dynamische Teil beinhaltet also alles was erst zur Laufzeit entsteht wie z.B
 
 Statischer Teil
 ---------------
-Alles was übersetzt werden soll muss im Quellcode gekennzeicht werden. Dies geschieht teilweise automatisch (bei GUI-Elementen) oder muss selbst vorgenommen werden. In den ComplexChecks wurde das mit der Methoden *_translate()* gemacht. 
+Alles was übersetzt werden soll, muss im Quellcode gekennzeicht werden. Dies geschieht teilweise automatisch (bei GUI-Elementen) oder muss selbst vorgenommen werden. In den ComplexChecks wurde das mit der Methoden *_translate()* gemacht. 
 
 Im Pluginwurzelverzeichnis (z.B. ``/home/stefan/.qgis2/python/plugins/veriso/``) muss eine Datei ``veriso.pro`` erstellt werden:
 
