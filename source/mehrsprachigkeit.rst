@@ -27,7 +27,7 @@ Mit dem Aufruf:
 
 .. code-block:: bash
 
-    pylupdate4 veriso.pro:
+    pylupdate4 veriso.pro
 
 im Pluginwurzelverzeichnis werden die beiden Dateien ``veriso_de.ts`` und  ``veriso_fr.ts`` im Verzeichnis  ``i18n/`` erstellt. Dabei durchsucht die Software alle zu übersetzenden Texte in den eingetragen Pythondateien und schreibt sie in die .ts-Dateien.
 
